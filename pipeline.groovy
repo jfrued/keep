@@ -1,29 +1,47 @@
 node{
-    stage("docker build and docker push"){
+    //环境变量
+    def REPOSITORY = 'REPOSITORY'
+    def PROJECT ='PROJECT'
+    def IMAGEVERSION = 'latest'
+    //更新代码
+    //登录docker私有镜像仓库
+    stage('login docker respository'){
+        sh "docker login ${REPOSITORY} -u USERNAME -p PASSWORD"
+    }
+    
+    //制作docker镜像并上传仓库
+    stage('make and push docker image'){
         sh """
             [ -d /tmp/tag/${JOB_NAME} ] && rm -rf /tmp/tag/${JOB_NAME}
             mkdir /tmp/tag/${JOB_NAME} -p
-
-            build(){
-                echo '0' > /tmp/tag/${JOB_NAME}/\${service}
-
-                //在这里完成docker build和docker push
-
-                echo '1' > /tmp/tag/${JOB_NAME}/\${service}
+            
+            WORKDIR=`pwd`
+            
+            DEST=`find . -name Dockerfile | awk -F'src' '{print \$1}'`
+            
+            func(){
+                cd \${WORKDIR}
+                cd \${dst}/target
+                IMAGENAME=`echo \${dst} | awk -F'/' '{print \$(NF-1)}'`
+                echo '0' > /tmp/tag/${JOB_NAME}/\${IMAGENAME}
+                
+                docker build -t ${REPOSITORY}/${PROJECT}/\${IMAGENAME}:${IMAGEVERSION} -f ../src/Dockerfile .
+                docker push ${REPOSITORY}/${PROJECT}/\${IMAGENAME}:${IMAGEVERSION}
+                
+                echo '1' > /tmp/tag/${JOB_NAME}/\${IMAGENAME}
             }
-
-            for service in services
+            
+            for dst in \${DEST}
             do
-                build &    //将一个docker的build push放到一个build函数中去完成
+                func &
             done
         """
     }
-
-    stage("restart pod"){
+        stage("restart pod"){
         sh """
             while true
             do
-                grep -r '0' /tmp/tag/${JOB_NAME} || //在这里完成pod的重启
+                grep -r '0' /tmp/tag/${JOB_NAME} || exit 0
                 sleep 3
             done
         """
