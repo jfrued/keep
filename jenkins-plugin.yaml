@@ -1,0 +1,7 @@
+jenkins plugins:
+- sugest plugins
+- kubernetes
+#- maven integration
+- role base authentication stragy
+- blue ocean
+- AnsiColor

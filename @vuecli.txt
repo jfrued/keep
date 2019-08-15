@@ -1,0 +1,15 @@
+nodejs安装选择package manager
+
+npm config set cache ""
+npm config set prefix ""
+
+npm install -g @vue/cli
+vue ui
+
+
+cd my-app
+npm i element-ui -S
+vue add element
+	fully import
+	No overwrite
+

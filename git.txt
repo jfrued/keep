@@ -1,0 +1,46 @@
+git add -A 							把所有没加到暂存区的文件都添加到暂存区
+git clone git_url  your-folder    	克隆到指定文件夹
+
+.gitignore
+	.gitignore
+	*.log
+	!important.log					例外，不忽略
+
+git status
+	红色								还没有 git add
+	绿色								还没有 git commit
+	staged							git add 后的状态
+
+git + shell							让文件可以被git追踪
+	git rm
+	git rm --cached					将新增的文件从暂存区移到工作区
+	git reset filename				将修改的文件从暂存区移到工作区
+
+git stash							临时挂起工作区
+	git stash list					列出挂起的工作区
+	git stash pop					恢复工作区
+
+git log 
+	git log --pretty=oneline
+
+git tag								列出所有tag
+	git tag v1						使用最近一次提交打tag
+	git tag v1 commit-version		使用指定提交打tag
+	git tag -d v1					删除某个tag
+	git push --tags					只推送tags
+
+git commit
+	git commit --amend	filename	补充提交到最近一次提交
+	git commit
+
+git blame filename					列出某个文件的详细修改过程
+
+
+git pull == git fetch(拉取最新内容) + git merge(合并到本地仓库)
+
+git rebase 和 git merge			都是用来合并分支
+	git rebase					合并后的日志不按时间排序，而按分支排序
+
+git repack			打包对象(文件和提交都是一个对象)，提升git效率
+
+git cherry-pick	commit_hash		只合并某个提交

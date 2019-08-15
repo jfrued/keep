@@ -1,0 +1,14 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: opspvc
+  namespace: kube-ops
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "nfs4241.storageclass"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
